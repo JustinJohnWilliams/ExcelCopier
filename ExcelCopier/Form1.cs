@@ -47,7 +47,9 @@ namespace ExcelCopier
             openFileDialog.RestoreDirectory = true;
 
             var results = new Dictionary<string, List<string>>();
-            Invoke((Action) (() => openFileDialog.ShowDialog()));
+            Invoke((Action)(() => openFileDialog.ShowDialog()));
+
+            backgroundWorker1.ReportProgress(1);
 
             try
             {
@@ -89,16 +91,19 @@ namespace ExcelCopier
                     }
 
                     results.Add(
-                        string.Format("{0}_{1}_{2}.txt", txtBoxClientName.Text, DateTime.Now.Ticks, fileCount++), list);
+                        "{0}_{1}_{2}.txt".FormatWith(txtBoxClientName.Text, DateTime.Now.Ticks, fileCount++), list);
 
                     current += amountToGrab;
 
                     var percent = (current/(decimal) range.Rows.Count)*100;
                     backgroundWorker1.ReportProgress((int) percent);
+
                 } while (current < range.Rows.Count);
 
-                var resultsDirectory = string.Format("{0}\\{1}\\{2}\\{3}",
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), name, txtBoxClientName.Text,
+                var resultsDirectory = "{0}\\{1}\\{2}\\{3}".FormatWith(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
+                    name, 
+                    txtBoxClientName.Text,
                     DateTime.Now.Ticks);
 
                 if (!Directory.Exists(resultsDirectory))
@@ -108,12 +113,12 @@ namespace ExcelCopier
 
                 foreach (var file in results)
                 {
-                    var fileName = string.Format("{0}\\{1}", resultsDirectory, file.Key);
+                    var fileName = "{0}\\{1}".FormatWith(resultsDirectory, file.Key);
                     if (!File.Exists(fileName))
                     {
                         using (var writer = new StreamWriter(fileName))
                         {
-                            foreach (string result in file.Value)
+                            foreach (var result in file.Value)
                             {
                                 writer.WriteLine(result);
                             }
@@ -121,7 +126,7 @@ namespace ExcelCopier
                     }
                 }
 
-                MessageBox.Show(string.Format(SuccessMessageFilesCreated_Format, fileCount), SuccessMessageTitle,
+                MessageBox.Show(SuccessMessageFilesCreated_Format.FormatWith(fileCount), SuccessMessageTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 xlWorkBook.Close(false);
