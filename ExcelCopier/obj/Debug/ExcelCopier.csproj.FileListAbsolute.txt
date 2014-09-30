@@ -1,0 +1,9 @@
+C:\Dev\ExcelCopier\ExcelCopier\bin\Debug\ExcelCopier.exe.config
+C:\Dev\ExcelCopier\ExcelCopier\bin\Debug\ExcelCopier.exe
+C:\Dev\ExcelCopier\ExcelCopier\bin\Debug\ExcelCopier.pdb
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.Form1.resources
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.Properties.Resources.resources
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.csproj.GenerateResource.Cache
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.exe
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.pdb
+C:\Dev\ExcelCopier\ExcelCopier\obj\Debug\ExcelCopier.csprojResolveAssemblyReference.cache

@@ -1,0 +1,8 @@
+C:\Dev\ExcelCopier\ExcelCopier\bin\Release\ExcelCopier.exe.config
+C:\Dev\ExcelCopier\ExcelCopier\bin\Release\ExcelCopier.exe
+C:\Dev\ExcelCopier\ExcelCopier\bin\Release\ExcelCopier.pdb
+C:\Dev\ExcelCopier\ExcelCopier\obj\Release\ExcelCopier.Form1.resources
+C:\Dev\ExcelCopier\ExcelCopier\obj\Release\ExcelCopier.Properties.Resources.resources
+C:\Dev\ExcelCopier\ExcelCopier\obj\Release\ExcelCopier.csproj.GenerateResource.Cache
+C:\Dev\ExcelCopier\ExcelCopier\obj\Release\ExcelCopier.exe
+C:\Dev\ExcelCopier\ExcelCopier\obj\Release\ExcelCopier.pdb

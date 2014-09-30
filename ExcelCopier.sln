@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelCopier", "ExcelCopier\ExcelCopier.csproj", "{2FFC1007-55B7-4164-854A-D6D41147A799}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_res", "_res", "{93946E95-A65B-48FD-9597-5A6C3BD9D252}"
+	ProjectSection(SolutionItems) = preProject
+		_res\copy_icon.ico = _res\copy_icon.ico
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FFC1007-55B7-4164-854A-D6D41147A799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FFC1007-55B7-4164-854A-D6D41147A799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FFC1007-55B7-4164-854A-D6D41147A799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FFC1007-55B7-4164-854A-D6D41147A799}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
