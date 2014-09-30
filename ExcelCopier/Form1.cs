@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Excel;
+using Action = System.Action;
+using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace ExcelCopier
 {
     public partial class Form1 : Form
     {
+        // ReSharper disable InconsistentNaming
+        private const string ErrorMessageTitle = "Error!";
+        private const string ErrorMessageClientRequired = "Client required";
+        private const string ErrorMessageNoFileSet = "No filename set";
+        private const string ErrorMessageNoFileExists = "No file exists";
+
+        private const string SuccessMessageTitle = "Success!";
+        private const string SuccessMessageFilesCreated_Format = "{0} files created successfully";
+
+        private const string ExcelFilter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+        // ReSharper restore InconsistentNaming
+
         public Form1()
         {
             InitializeComponent();
@@ -27,18 +36,18 @@ namespace ExcelCopier
 
             if (string.IsNullOrEmpty(txtBoxClientName.Text))
             {
-                MessageBox.Show("Client required", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ErrorMessageClientRequired, ErrorMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var openFileDialog = new OpenFileDialog();
             openFileDialog.InitializeLifetimeService();
             openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            openFileDialog.Filter = ExcelFilter;
             openFileDialog.RestoreDirectory = true;
 
             var results = new Dictionary<string, List<string>>();
-            Invoke((Action)(() => { openFileDialog.ShowDialog(); }));
+            Invoke((Action) (() => openFileDialog.ShowDialog()));
 
             try
             {
@@ -46,21 +55,22 @@ namespace ExcelCopier
 
                 if (string.IsNullOrEmpty(excelFile))
                 {
-                    MessageBox.Show("No filename set", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ErrorMessageNoFileSet, ErrorMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
                 if (!File.Exists(excelFile))
                 {
-                    MessageBox.Show("No file exists", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ErrorMessageNoFileExists, ErrorMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
-                var xlApp = new Excel.Application();
+                var xlApp = new Application();
                 var xlWorkBook = xlApp.Workbooks.Open(excelFile);
-                var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                var xlWorkSheet = (Worksheet) xlWorkBook.Worksheets.Item[1];
 
                 var range = xlWorkSheet.UsedRange;
 
-                var rowCount = 0;
                 var current = 0;
                 var fileCount = 0;
 
@@ -69,21 +79,27 @@ namespace ExcelCopier
                     var amountToGrab = Math.Min(range.Rows.Count, maxCount);
                     var list = new List<string>();
 
-                    for (rowCount = 1; rowCount <= amountToGrab; rowCount++)
+                    for (var rowCount = 1; rowCount <= amountToGrab; rowCount++)
                     {
-                        list.Add((string)(range.Cells[rowCount + current, 1] as Excel.Range).Value2);
+                        var resultSet = range.Cells[rowCount + current, 1] as Range;
+                        if (resultSet != null)
+                        {
+                            list.Add((string) resultSet.Value2);
+                        }
                     }
 
-                    results.Add(String.Format("{0}_{1}_{2}.txt", txtBoxClientName.Text, DateTime.Now.Ticks, fileCount++), list);
+                    results.Add(
+                        string.Format("{0}_{1}_{2}.txt", txtBoxClientName.Text, DateTime.Now.Ticks, fileCount++), list);
 
                     current += amountToGrab;
 
-                    var percent = ((decimal)current / (decimal)range.Rows.Count) * 100;
-                    backgroundWorker1.ReportProgress((int)percent);
-
+                    var percent = (current/(decimal) range.Rows.Count)*100;
+                    backgroundWorker1.ReportProgress((int) percent);
                 } while (current < range.Rows.Count);
 
-                string resultsDirectory = string.Format("{0}\\{1}\\{2}\\{3}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), name, txtBoxClientName.Text, DateTime.Now.Ticks);
+                var resultsDirectory = string.Format("{0}\\{1}\\{2}\\{3}",
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), name, txtBoxClientName.Text,
+                    DateTime.Now.Ticks);
 
                 if (!Directory.Exists(resultsDirectory))
                 {
@@ -95,9 +111,9 @@ namespace ExcelCopier
                     var fileName = string.Format("{0}\\{1}", resultsDirectory, file.Key);
                     if (!File.Exists(fileName))
                     {
-                        using (StreamWriter writer = new StreamWriter(fileName))
+                        using (var writer = new StreamWriter(fileName))
                         {
-                            foreach (var result in file.Value)
+                            foreach (string result in file.Value)
                             {
                                 writer.WriteLine(result);
                             }
@@ -105,14 +121,15 @@ namespace ExcelCopier
                     }
                 }
 
-                MessageBox.Show(String.Format("{0} files created successfully", fileCount), "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(SuccessMessageFilesCreated_Format, fileCount), SuccessMessageTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 xlWorkBook.Close(false);
                 xlApp.Quit();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, ErrorMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
